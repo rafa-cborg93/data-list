@@ -1,15 +1,18 @@
 package com.test.datalist.service;
 
+import com.google.gson.Gson;
 import com.test.datalist.model.DataConnection;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class PersistService {
 
+    private Gson gson;
     System.Logger logger = System.getLogger(PersistService.class.getName());
+
+    public PersistService() {
+        this.gson = new Gson();
+    }
 
     public String persist(DataConnection dataConnection) {
         logger.log(System.Logger.Level.INFO, "PersistService.persist() - Persisting data connection to file.");
@@ -17,6 +20,13 @@ public class PersistService {
         String filePath = "src/main/java/com/test/datalist/data/" + dataConnection.getDatabase() + "-" + dataConnection.getAmbiente() + ".json";
 
         return persistToFile(dataConnection, filePath);
+    }
+
+    public Object getDataConnection(String database, String ambiente) {
+        logger.log(System.Logger.Level.INFO, "PersistService.getDataConnection() - Getting data connection from file.");
+        String filePath = "src/main/java/com/test/datalist/data/" + database + "-" + ambiente + ".json";
+
+        return getDataConnectionFromFile(filePath);
     }
 
     private String persistToFile(DataConnection dataConnection, String filePath) {
@@ -35,11 +45,34 @@ public class PersistService {
              BufferedWriter writer = new BufferedWriter(file);
              PrintWriter printWriter = new PrintWriter(writer);) {
             printWriter.println(result);
+
             logger.log(System.Logger.Level.INFO, "Persisted data: " + result);
             return "Dados persistidos com sucesso.";
         } catch (IOException e) {
             logger.log(System.Logger.Level.ERROR, "Error persisting data: " + e.getMessage());
             return "Erro ao persistir os dados.";
+        }
+    }
+
+    private Object getDataConnectionFromFile(String filePath) {
+        logger.log(System.Logger.Level.INFO, "PersistService.getDataConnectionFromFile() - Getting data from filePath={" + filePath + "}");
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            // Ler o conteúdo do arquivo JSON como uma string
+            StringBuilder jsonContent = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                jsonContent.append(line);
+            }
+
+            // Converter a string JSON de volta para um objeto DataConnection usando Gson
+            DataConnection dataConnection = gson.fromJson(jsonContent.toString(), DataConnection.class);
+
+            logger.log(System.Logger.Level.INFO, "DataConnection: " + dataConnection);
+            return dataConnection;
+        } catch (IOException e) {
+            logger.log(System.Logger.Level.ERROR, "Error getting data: " + e.getMessage());
+            return "Error:" + e.getMessage();
         }
     }
 }

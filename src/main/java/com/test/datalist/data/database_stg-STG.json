@@ -1,0 +1,8 @@
+{
+  "host": "teste-stage",
+  "port": "3305",
+  "username": "user_stag",
+  "password": "pass_stg",
+  "database": "database_stg",
+  "ambiente": "STG"
+}
