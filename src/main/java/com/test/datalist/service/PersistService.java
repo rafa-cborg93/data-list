@@ -17,14 +17,14 @@ public class PersistService {
     public String persist(DataConnection dataConnection) {
         logger.log(System.Logger.Level.INFO, "PersistService.persist() - Persisting data connection to file.");
 
-        String filePath = "src/main/java/com/test/datalist/data/" + dataConnection.getDatabase() + "-" + dataConnection.getAmbiente() + ".json";
+        String filePath = "C:/data" + dataConnection.getDatabase() + "-" + dataConnection.getAmbiente() + ".json";
 
         return persistToFile(dataConnection, filePath);
     }
 
     public Object getDataConnection(String database, String ambiente) {
         logger.log(System.Logger.Level.INFO, "PersistService.getDataConnection() - Getting data connection from file.");
-        String filePath = "src/main/java/com/test/datalist/data/" + database + "-" + ambiente + ".json";
+        String filePath = "C:/data" + database + "-" + ambiente + ".json";
 
         return getDataConnectionFromFile(filePath);
     }

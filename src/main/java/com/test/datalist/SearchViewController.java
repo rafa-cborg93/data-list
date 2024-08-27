@@ -48,7 +48,7 @@ public class SearchViewController {
         if (result instanceof DataConnection) {
             showDataConnection((DataConnection) result);
         } else {
-            txt_error.setText(result.toString());
+            txt_error.setText("Dados não encontrados!");
         }
     }
 
